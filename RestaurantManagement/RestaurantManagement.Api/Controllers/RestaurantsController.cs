@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RestaurantManagement.Core.Services;
 using RestaurantManagement.Data;
-using RestaurantManagement.Entities;
 using RestaurantManagement.Models.Common;
 using RestaurantManagement.Models.Restaurant;
 

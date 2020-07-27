@@ -67,8 +67,24 @@ namespace RestaurantManagement.Business.Services
                 parameters.OrderBy = AppConstants.Name;
             }
 
+            parameters.OrderBy = GetProperyInfoOfOrderBy(parameters.OrderBy.ToLower());
+            
             var restaurants = await _restaurantsRepository.GetAll(parameters);
             return _mapper.Map<IEnumerable<RestaurantDetailsDto>>(restaurants);
+        }
+
+        private string GetProperyInfoOfOrderBy(string param)
+        {
+            var objectProp = typeof(RestaurantDetailsDto).GetProperties().FirstOrDefault(x => x.Name.ToLower() == param);
+
+            if (objectProp == null)
+            {
+                throw new ArgumentException("Invalid OrderBy parameter!");
+            }
+
+            param = param.First().ToString().ToUpper() + param.Substring(1);
+            return param;
+
         }
 
         private void MapProperties(Restaurant restaurant, RestaurantDetailsDto restaurantDto)
