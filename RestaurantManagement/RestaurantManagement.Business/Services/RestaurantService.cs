@@ -3,7 +3,9 @@ using RestaurantManagement.Core.Repositories;
 using RestaurantManagement.Core.Services;
 using RestaurantManagement.Entities;
 using RestaurantManagement.Models.Restaurant;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RestaurantManagement.Business.Services
@@ -23,6 +25,7 @@ namespace RestaurantManagement.Business.Services
         public async Task<RestaurantDetailsDto> Add(RestaurantDetailsDto restaurantDto)
         {
             var restaurant = _mapper.Map<Restaurant>(restaurantDto);
+            restaurant.CreatedDate = DateTime.UtcNow;
             await _restaurantsRepository.Add(restaurant);
             return restaurantDto;
         }
@@ -39,13 +42,36 @@ namespace RestaurantManagement.Business.Services
             return _mapper.Map<RestaurantDetailsDto>(restaurant);
         }
 
-        public Task<bool> Edit(RestaurantDetailsDto restaurantDto)
+        public async Task<bool> Edit(RestaurantDetailsDto restaurantDto)
         {
-            var restaurant = _mapper.Map<Restaurant>(restaurantDto);
+            //var restaurant = _mapper.Map<Restaurant>(restaurantDto);
+            var restaurant = await _restaurantsRepository.Find(restaurantDto.Id);
+            MapProperties(restaurant, restaurantDto);
 
-            var result = _restaurantsRepository.Edit(restaurant);
+            var result = await _restaurantsRepository.Edit(restaurant);
 
             return result;
+        }
+
+        private void MapProperties(Restaurant restaurant, RestaurantDetailsDto restaurantDto)
+        {
+            var dbProperties = typeof(Restaurant).GetProperties().ToArray();
+            var dtoProperties = typeof(RestaurantDetailsDto).GetProperties().ToArray();
+
+            for (int i = 0; i < dtoProperties.Length; i++)
+            {
+                var dbProperty = dbProperties.Where(s => s.Name == dtoProperties[i].Name).FirstOrDefault();
+                dynamic dbValue = dbProperty.GetValue(restaurant, null);
+                dynamic dtoValue = dtoProperties[i].GetValue(restaurantDto, null);
+
+                if (dbValue != dtoValue)
+                {
+                    dbProperty.SetValue(restaurant, dtoValue);
+                }
+                
+            }
+
+            restaurant.ModifiedDate = DateTime.UtcNow;
         }
 
         public async Task<RestaurantDetailsDto> Find(int id)
