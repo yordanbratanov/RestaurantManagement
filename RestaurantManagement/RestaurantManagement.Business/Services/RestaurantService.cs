@@ -39,6 +39,15 @@ namespace RestaurantManagement.Business.Services
             return _mapper.Map<RestaurantDetailsDto>(restaurant);
         }
 
+        public Task<bool> Edit(RestaurantDetailsDto restaurantDto)
+        {
+            var restaurant = _mapper.Map<Restaurant>(restaurantDto);
+
+            var result = _restaurantsRepository.Edit(restaurant);
+
+            return result;
+        }
+
         public async Task<RestaurantDetailsDto> Find(int id)
         {
             var result = await _restaurantsRepository.Find(id);

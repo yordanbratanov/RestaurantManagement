@@ -19,5 +19,9 @@ namespace RestaurantManagement.Entities
         [Required]
         [Range(1,5)]
         public short Rating { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime? ModifiedDate { get; set; }
     }
 }

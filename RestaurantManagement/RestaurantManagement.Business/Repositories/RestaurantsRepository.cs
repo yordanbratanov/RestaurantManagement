@@ -3,7 +3,9 @@ using RestaurantManagement.Core.Repositories;
 using RestaurantManagement.Data;
 using RestaurantManagement.Entities;
 using RestaurantManagement.Models.Restaurant;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RestaurantManagement.Business.Repositories
@@ -24,6 +26,7 @@ namespace RestaurantManagement.Business.Repositories
         {
             await _dbContext.Restaurants.AddAsync(restaurant);
             await _dbContext.SaveChangesAsync();
+            
         }
 
         public async Task<Restaurant> Find(int id) =>
@@ -33,6 +36,28 @@ namespace RestaurantManagement.Business.Repositories
         {
             _dbContext.Restaurants.Remove(restaurant);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> Edit(Restaurant restaurant)
+        {
+            _dbContext.Entry(restaurant).State = EntityState.Modified;
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_dbContext.Restaurants.Any(e => e.Id == restaurant.Id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return true;
         }
     }
 }

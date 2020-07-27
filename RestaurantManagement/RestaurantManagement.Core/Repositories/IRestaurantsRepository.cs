@@ -15,5 +15,7 @@ namespace RestaurantManagement.Core.Repositories
         Task<Restaurant> Find(int id);
 
         Task Delete(Restaurant restaurant);
+
+        Task<bool> Edit(Restaurant restaurant);
     }
 }
