@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -5,6 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RestaurantManagement.Business.Repositories;
+using RestaurantManagement.Business.Services;
+using RestaurantManagement.Core;
+using RestaurantManagement.Core.Repositories;
+using RestaurantManagement.Core.Services;
 using RestaurantManagement.Data;
 using System.Threading.Tasks;
 
@@ -28,6 +34,14 @@ namespace RestaurantManagement.Api
             });
 
             services.AddControllers();
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddTransient<IRestaurantService, RestaurantService>();
+            services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
 
             services.AddSwaggerGen(options =>
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurant Management API", Version = "v1" })

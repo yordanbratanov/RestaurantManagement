@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RestaurantManagement.Core.Services;
 using RestaurantManagement.Data;
 using RestaurantManagement.Entities;
+using RestaurantManagement.Models.Restaurant;
 
 namespace RestaurantManagement.Api.Controllers
 {
@@ -15,17 +17,19 @@ namespace RestaurantManagement.Api.Controllers
     public class RestaurantsController : ControllerBase
     {
         private readonly ManagementDbContext _context;
+        private readonly IRestaurantService _restaurantService;
 
-        public RestaurantsController(ManagementDbContext context)
+        public RestaurantsController(ManagementDbContext context, IRestaurantService restaurantService)
         {
             _context = context;
+            _restaurantService = restaurantService;
         }
 
         // GET: api/Restaurants
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Restaurant>>> GetRestaurants()
+        public async Task<ActionResult<IEnumerable<RestaurantDetailsDto>>> GetRestaurants()
         {
-            return await _context.Restaurants.ToListAsync();
+            return Ok(await _restaurantService.GetAll());
         }
 
         // GET: api/Restaurants/5

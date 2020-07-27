@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RestaurantManagement.Core\RestaurantManagement.Core.csproj" />
+    <ProjectReference Include="..\RestaurantManagement.Data\RestaurantManagement.Data.csproj" />
+    <ProjectReference Include="..\RestaurantManagement.Models\RestaurantManagement.Models.csproj" />
   </ItemGroup>
 
 </Project>
