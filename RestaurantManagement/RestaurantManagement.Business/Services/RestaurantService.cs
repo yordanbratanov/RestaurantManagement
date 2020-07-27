@@ -27,6 +27,18 @@ namespace RestaurantManagement.Business.Services
             return restaurantDto;
         }
 
+        public async Task<RestaurantDetailsDto> Delete(int id)
+        {
+            var restaurant = await _restaurantsRepository.Find(id);
+
+            if (restaurant != null)
+            {
+                await _restaurantsRepository.Delete(restaurant);
+            }
+
+            return _mapper.Map<RestaurantDetailsDto>(restaurant);
+        }
+
         public async Task<RestaurantDetailsDto> Find(int id)
         {
             var result = await _restaurantsRepository.Find(id);

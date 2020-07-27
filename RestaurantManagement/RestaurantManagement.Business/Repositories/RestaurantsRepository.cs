@@ -28,5 +28,11 @@ namespace RestaurantManagement.Business.Repositories
 
         public async Task<Restaurant> Find(int id) =>
             await _dbContext.Restaurants.FindAsync(id);
+
+        public async Task Delete(Restaurant restaurant)
+        {
+            _dbContext.Restaurants.Remove(restaurant);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

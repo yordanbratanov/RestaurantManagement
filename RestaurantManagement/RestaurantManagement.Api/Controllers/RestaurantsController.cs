@@ -91,18 +91,15 @@ namespace RestaurantManagement.Api.Controllers
 
         // DELETE: api/Restaurants/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Restaurant>> DeleteRestaurant(int id)
+        public async Task<ActionResult<RestaurantDetailsDto>> DeleteRestaurant(int id)
         {
-            var restaurant = await _context.Restaurants.FindAsync(id);
+            var restaurant = await _restaurantService.Delete(id);
             if (restaurant == null)
             {
                 return NotFound();
             }
 
-            _context.Restaurants.Remove(restaurant);
-            await _context.SaveChangesAsync();
-
-            return restaurant;
+            return Ok(restaurant);
         }
 
         private bool RestaurantExists(int id)

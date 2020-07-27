@@ -11,5 +11,7 @@ namespace RestaurantManagement.Core.Services
         Task<RestaurantDetailsDto> Add(RestaurantDetailsDto restaurant);
 
         Task<RestaurantDetailsDto> Find(int id);
+
+        Task<RestaurantDetailsDto> Delete(int id);
     }
 }

@@ -11,6 +11,9 @@ namespace RestaurantManagement.Core.Repositories
         Task<IEnumerable<Restaurant>> GetAll();
 
         Task Add(Restaurant restaurant);
+
         Task<Restaurant> Find(int id);
+
+        Task Delete(Restaurant restaurant);
     }
 }
