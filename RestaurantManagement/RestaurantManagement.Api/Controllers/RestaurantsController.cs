@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using RestaurantManagement.Core.Services;
 using RestaurantManagement.Data;
 using RestaurantManagement.Entities;
+using RestaurantManagement.Models.Common;
 using RestaurantManagement.Models.Restaurant;
 
 namespace RestaurantManagement.Api.Controllers
@@ -26,9 +27,9 @@ namespace RestaurantManagement.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RestaurantDetailsDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<RestaurantDetailsDto>>> GetAll([FromQuery] RestaurantListParams parameters)
         {
-            return Ok(await _restaurantService.GetAll());
+            return Ok(await _restaurantService.GetAll(parameters));
         }
 
         [HttpPut("{id}")]

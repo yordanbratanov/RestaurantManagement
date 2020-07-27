@@ -1,4 +1,5 @@
 ﻿using RestaurantManagement.Entities;
+using RestaurantManagement.Models.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace RestaurantManagement.Core.Repositories
 {
     public interface IRestaurantsRepository
     {
-        Task<IEnumerable<Restaurant>> GetAll();
+        Task<IEnumerable<Restaurant>> GetAll(RestaurantListParams parameters);
 
         Task Add(Restaurant restaurant);
 

@@ -2,6 +2,7 @@
 using RestaurantManagement.Core.Repositories;
 using RestaurantManagement.Core.Services;
 using RestaurantManagement.Entities;
+using RestaurantManagement.Models.Common;
 using RestaurantManagement.Models.Restaurant;
 using System;
 using System.Collections.Generic;
@@ -44,13 +45,30 @@ namespace RestaurantManagement.Business.Services
 
         public async Task<bool> Edit(RestaurantDetailsDto restaurantDto)
         {
-            //var restaurant = _mapper.Map<Restaurant>(restaurantDto);
             var restaurant = await _restaurantsRepository.Find(restaurantDto.Id);
             MapProperties(restaurant, restaurantDto);
 
             var result = await _restaurantsRepository.Edit(restaurant);
 
             return result;
+        }
+
+        public async Task<RestaurantDetailsDto> Find(int id)
+        {
+            var result = await _restaurantsRepository.Find(id);
+
+            return _mapper.Map<RestaurantDetailsDto>(result);
+        }
+
+        public async Task<IEnumerable<RestaurantDetailsDto>> GetAll(RestaurantListParams parameters)
+        {
+            if (string.IsNullOrEmpty(parameters.OrderBy))
+            {
+                parameters.OrderBy = AppConstants.Name;
+            }
+
+            var restaurants = await _restaurantsRepository.GetAll(parameters);
+            return _mapper.Map<IEnumerable<RestaurantDetailsDto>>(restaurants);
         }
 
         private void MapProperties(Restaurant restaurant, RestaurantDetailsDto restaurantDto)
@@ -68,23 +86,10 @@ namespace RestaurantManagement.Business.Services
                 {
                     dbProperty.SetValue(restaurant, dtoValue);
                 }
-                
+
             }
 
             restaurant.ModifiedDate = DateTime.UtcNow;
-        }
-
-        public async Task<RestaurantDetailsDto> Find(int id)
-        {
-            var result = await _restaurantsRepository.Find(id);
-
-            return _mapper.Map<RestaurantDetailsDto>(result);
-        }
-
-        public async Task<IEnumerable<RestaurantDetailsDto>> GetAll()
-        {
-            var restaurants = await _restaurantsRepository.GetAll();
-            return _mapper.Map<IEnumerable<RestaurantDetailsDto>>(restaurants);
         }
     }
 }
