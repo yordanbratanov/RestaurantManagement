@@ -32,20 +32,6 @@ namespace RestaurantManagement.Api.Controllers
             return Ok(await _restaurantService.GetAll());
         }
 
-        // GET: api/Restaurants/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Restaurant>> GetRestaurant(int id)
-        {
-            var restaurant = await _context.Restaurants.FindAsync(id);
-
-            if (restaurant == null)
-            {
-                return NotFound();
-            }
-
-            return restaurant;
-        }
-
         // PUT: api/Restaurants/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -78,16 +64,29 @@ namespace RestaurantManagement.Api.Controllers
             return NoContent();
         }
 
+        // GET: api/Restaurants/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<RestaurantDetailsDto>> Get(int id)
+        {
+            var restaurant = await _restaurantService.Find(id);
+
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(restaurant);
+        }
+
         // POST: api/Restaurants
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Restaurant>> PostRestaurant(Restaurant restaurant)
+        public async Task<ActionResult<RestaurantDetailsDto>> Add(RestaurantDetailsDto restaurant)
         {
-            _context.Restaurants.Add(restaurant);
-            await _context.SaveChangesAsync();
+            var result = await _restaurantService.Add(restaurant);
 
-            return CreatedAtAction("GetRestaurant", new { id = restaurant.Id }, restaurant);
+            return CreatedAtAction(nameof(Get), new { id = restaurant.Id }, restaurant);
         }
 
         // DELETE: api/Restaurants/5

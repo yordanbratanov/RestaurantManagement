@@ -11,7 +11,7 @@ namespace RestaurantManagement.Core
     {
         public MappingProfile()
         {
-            CreateMap<Restaurant, RestaurantDetailsDto>();
+            CreateMap<Restaurant, RestaurantDetailsDto>().ReverseMap();
         }
     }
 }
